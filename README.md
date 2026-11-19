@@ -11,3 +11,5 @@ Synthetic checkpoint: tamper-schema
 Synthetic checkpoint: tamper-bounds
 
 Synthetic checkpoint: cache-fault
+
+Genuine fork PR restore-only probe. Do not merge.
