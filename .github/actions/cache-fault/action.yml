@@ -1,0 +1,5 @@
+name: Controlled local cache failure
+description: Launch pinned stock cache action against a dead job-local endpoint
+runs:
+  using: node20
+  main: index.js
