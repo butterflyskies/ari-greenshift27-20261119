@@ -24,6 +24,13 @@ jobs:
         \ --proto '=https' --tlsv1.2 \\\n  \"https://github.com/butterflysky-ai/ari-greenshift27-20261119/releases/download/$RELEASE/greenshift-$RELEASE-x86_64-unknown-linux-musl\"\
         \ \\\n  --output \"$RUNNER_TEMP/greenshift\"\nprintf '%s  %s\\n' \"$SHA256\" \"$RUNNER_TEMP/greenshift\" | sha256sum\
         \ --check\nchmod +x \"$RUNNER_TEMP/greenshift\"\n"
+    - name: Trace only safe Git operation names
+      run: "mkdir -p \"$RUNNER_TEMP/trace-bin\"\nprintf 'GREENSHIFT_REAL_GIT=%s\\n' \"$(command -v git)\" >> \"$GITHUB_ENV\"\
+        \nprintf 'GREENSHIFT_TRACE_FILE=%s\\n' \"$RUNNER_TEMP/greenshift-git-ops.txt\" >> \"$GITHUB_ENV\"\ncat > \"$RUNNER_TEMP/trace-bin/git\"\
+        \ <<'SH'\n#!/bin/sh\nfor word in \"$@\"; do\n  case \"$word\" in\n    init|ls-remote|fetch|hash-object|mktree|cat-file|ls-tree|commit-tree|push)\n\
+        \      printf 'GREENSHIFT_GIT_OP=%s\\n' \"$word\" >> \"$GREENSHIFT_TRACE_FILE\"\n      break;;\n  esac\ndone\nexec\
+        \ \"$GREENSHIFT_REAL_GIT\" \"$@\"\nSH\nchmod +x \"$RUNNER_TEMP/trace-bin/git\"\nprintf '%s\\n' \"$RUNNER_TEMP/trace-bin\"\
+        \ >> \"$GITHUB_PATH\"\n"
     - name: Resolve canonical cache key
       id: history
       env:
@@ -70,6 +77,9 @@ jobs:
         GREENSHIFT_HISTORY_TOKEN: ${{ github.token }}
       run: "\"$RUNNER_TEMP/greenshift\" run nextest --history-remote \"$HISTORY_REMOTE\" \\\n  --history-cache-dir .greenshift/cache\
         \ --history-artifact .greenshift/publish.sqlite \\\n  --commit \"$GITHUB_SHA\" -- --no-fail-fast\n"
+    - name: Read safe Git operation provenance
+      if: ${{ !cancelled() }}
+      run: if test -f "$GREENSHIFT_TRACE_FILE"; then cat "$GREENSHIFT_TRACE_FILE"; else echo "NO_GIT_OPERATIONS"; fi
     - name: Read rows and optionally tamper synthetic artifact
       if: ${{ !cancelled() }}
       run: "python3 - <<'PY'\nimport sqlite3,json,pathlib\np=pathlib.Path('.greenshift/publish.sqlite')\nif p.exists():\n\
