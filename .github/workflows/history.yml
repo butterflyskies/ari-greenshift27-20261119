@@ -21,7 +21,7 @@ jobs:
     - name: Install pinned greenshift release
       shell: bash
       run: "[[ \"$RELEASE\" =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+$ ]]\n[[ \"$SHA256\" =~ ^[0-9a-f]{64}$ ]]\ncurl --fail --location\
-        \ --proto '=https' --tlsv1.2 \\\n  \"https://github.com/butterflyskies/ari-greenshift27-20261119/releases/download/$RELEASE/greenshift-$RELEASE-x86_64-unknown-linux-musl\"\
+        \ --proto '=https' --tlsv1.2 \\\n  \"https://github.com/butterflysky-ai/ari-greenshift27-20261119/releases/download/$RELEASE/greenshift-$RELEASE-x86_64-unknown-linux-musl\"\
         \ \\\n  --output \"$RUNNER_TEMP/greenshift\"\nprintf '%s  %s\\n' \"$SHA256\" \"$RUNNER_TEMP/greenshift\" | sha256sum\
         \ --check\nchmod +x \"$RUNNER_TEMP/greenshift\"\n"
     - name: Resolve canonical cache key
@@ -111,7 +111,7 @@ jobs:
     - name: Install pinned greenshift release
       shell: bash
       run: "[[ \"$RELEASE\" =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+$ ]]\n[[ \"$SHA256\" =~ ^[0-9a-f]{64}$ ]]\ncurl --fail --location\
-        \ --proto '=https' --tlsv1.2 \\\n  \"https://github.com/butterflyskies/ari-greenshift27-20261119/releases/download/$RELEASE/greenshift-$RELEASE-x86_64-unknown-linux-musl\"\
+        \ --proto '=https' --tlsv1.2 \\\n  \"https://github.com/butterflysky-ai/ari-greenshift27-20261119/releases/download/$RELEASE/greenshift-$RELEASE-x86_64-unknown-linux-musl\"\
         \ \\\n  --output \"$RUNNER_TEMP/greenshift\"\nprintf '%s  %s\\n' \"$SHA256\" \"$RUNNER_TEMP/greenshift\" | sha256sum\
         \ --check\nchmod +x \"$RUNNER_TEMP/greenshift\"\n"
     - name: Download SQLite data
