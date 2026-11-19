@@ -5,3 +5,5 @@ No real project or personal data. This repository will be retired after verifica
 Synthetic checkpoint: run2
 
 Synthetic checkpoint: cache-wipe-scale
+
+Synthetic checkpoint: tamper-schema

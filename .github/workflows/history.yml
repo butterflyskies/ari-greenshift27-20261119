@@ -75,8 +75,9 @@ jobs:
     - name: Run tests and export data
       env:
         GREENSHIFT_HISTORY_TOKEN: ${{ github.token }}
-      run: "\"$RUNNER_TEMP/greenshift\" run nextest --history-remote \"$HISTORY_REMOTE\" \\\n  --history-cache-dir .greenshift/cache\
-        \ --history-artifact .greenshift/publish.sqlite \\\n  --commit \"$GITHUB_SHA\" -- --no-fail-fast\n"
+      run: ": > \"$GREENSHIFT_TRACE_FILE\"\n\"$RUNNER_TEMP/greenshift\" run nextest --history-remote \"$HISTORY_REMOTE\" \\\
+        \n  --history-cache-dir .greenshift/cache --history-artifact .greenshift/publish.sqlite \\\n  --commit \"$GITHUB_SHA\"\
+        \ -- --no-fail-fast\n"
     - name: Read safe Git operation provenance
       if: ${{ !cancelled() }}
       run: if test -f "$GREENSHIFT_TRACE_FILE"; then cat "$GREENSHIFT_TRACE_FILE"; else echo "NO_GIT_OPERATIONS"; fi
